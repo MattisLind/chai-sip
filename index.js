@@ -896,7 +896,7 @@ function makeRequest(method, destination, headers, contentType, body,user) {
     uri: destination,
     headers: {
       to: {uri: destination + ";transport="+sipParams.transport},
-      from: {uri: "sip:"+sipParams.userid+"@"+sipParams.domain+"", params: {tag: rstring()}},
+      from: {uri: "sip:"+(user?user:sipParams.userid)+"@"+sipParams.domain+"", params: {tag: rstring()}},
       "call-id": rstring()+Date.now().toString(),
       cseq: {method: method, seq: Math.floor(Math.random() * 1e5)},
       contact: [{uri: "sip:"+contactUser+"@" + ipAddress + ":" + sipParams.port + ";transport="+sipParams.transport  }],
@@ -1320,7 +1320,7 @@ module.exports = function (chai, utils, sipStack) {
           dropAck = params.dropAck;
         }
 
-        request = makeRequest("INVITE",destination,headers,contentType,body);
+        request = makeRequest("INVITE",destination,headers,contentType,body, params.user);
         if(sipParams.playRtp) {
           listenMedia();
         }
